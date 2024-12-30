@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Trending Topics</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 style="align-items: center;">Twitter Trending Topics</h1>
+    <button onclick="runScript()">Click here to run the script</button>
+    <h6 id="waitarea" style="margin-top: 2px;">It can take upto 5 min...</h6>
+    <div id="result" class="result" style="display: none;background-color: #E4E9FD;background-image: -webkit-linear-gradient(65deg, #A683E3 50%, #E4E9FD 50%);">
+        <h3>Trending Topics:</h3>
+        <p id="topics"></p>
+        <p><strong>IP Address:</strong> <span id="ip"></span></p>
+        <p><strong>Date & Time:</strong> <span id="date_"></span></p>
+        <p><strong>MongoDB JSON Extract:</strong></p>
+        <pre id="jsonData"></pre>
+        <button onclick="runScript()">Click here to run the query again</button>
+        <h6 id="waitarea" style="margin-top: 2px;">It can take upto 5 min...</h6>
+    </div>
+    <script>
+        function runScript() {
+            // Disable the button so that it clicked only once not multiple...
+            document.querySelector('button').disabled = true;
+            // Calling the server to run the script...
+            fetch('/run-script')
+                .then(response => response.json())
+                .then(data => {
+                    // Displaying the result...
+                    var n = data.length;
+                    document.getElementById('topics').innerText = `1. ${data[n-1].trend1}\n2. ${data[n-1].trend2}\n3. ${data[n-1].trend3}\n4. ${data[n-1].trend4}\n5. ${data[n-1].trend5}`;
+                    document.getElementById('ip').innerText = data[n-1].ip_address;
+                    document.getElementById('date_').innerText = data[n-1].end_time;
+                    document.getElementById('jsonData').textContent = JSON.stringify(data, null, 2);
+
+                    // Showing the result div....
+                    document.getElementById('result').style.display = 'block';
+
+                    // Enable the button again
+                    document.querySelector('button').disabled = false;
+                })
+                .catch(error => {
+                    console.error('Error running script:', error);
+                    alert('An error occurred while running the script.');
+                    document.querySelector('button').disabled = false;
+                });
+        }
+    </script>
+</body>
+</html>

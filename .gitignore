@@ -1,0 +1,4 @@
+# Ignore .env file to keep sensitive data out of version control
+.env
+.vercel
+node_modules
